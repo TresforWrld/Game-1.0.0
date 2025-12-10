@@ -65,7 +65,11 @@ playerImg.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABze
   ctx.fillStyle = "red";  // bright red
   ctx.fillRect(player.x, player.y, player.width, player.height);
   }
-
+// Enemies
+const enemies = [
+  { x: 400, y: canvas.height - 90, width: 40, height: 40, dx: 2 },
+  { x: 700, y: canvas.height - 190, width: 40, height: 40, dx: 3 }
+];
 // Update loop
 function update() {
   // Horizontal movement
