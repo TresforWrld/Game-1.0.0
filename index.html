@@ -61,9 +61,10 @@ const playerImg = new Image();
 playerImg.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVRYR+3X0Q2DMBBG4XMQcwBnACcwA3MAmcARkARwgMchwKO1TaihmNiBs/MpUZx9dW9rIhwJzOR9fL2S9rtHclEXtA4G5nVc3YBB6QjW1eF0ZoXc9hllLQro4A1uU6q2vgujOyiTujlPj1FblH9uud78TBwATWvKe7XWnmkQDsJAgQSeJv3KSqGYgo0VoJ38BbBrbP4aYTwMoZv260E/6r0iY0R8sUDKLtNJ4w8zF5gWTSy9VW8g5vSEVrNQqILtAAAAAElFTkSuQmCC";
 
 // Draw player
-function drawPlayer() {
-  ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
-}
+  function drawPlayer() {
+  ctx.fillStyle = "red";  // bright red
+  ctx.fillRect(player.x, player.y, player.width, player.height);
+  }
 
 // Update loop
 function update() {
