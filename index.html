@@ -1,26 +1,123 @@
-draw();
-  requestAnimationFrame(update);
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Platformer Game</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #87CEEB; /* Sky blue */
+      font-family: Arial, sans-serif;
+    }
+    canvas {
+      display: block;
+      background: #222;
+    }
+  </style>
+</head>
+<body>
+<canvas id="game"></canvas>
 
-// Load Base64 Player Sprite
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// Player object
+const player = {
+  x: 100,
+  y: 0,
+  width: 40,
+  height: 40,
+  dx: 0,
+  dy: 0,
+  speed: 5,
+  jumpForce: 15,
+  grounded: false
+};
+
+// Gravity
+const gravity = 0.8;
+
+// Platforms
+const platforms = [
+  { x: 0, y: canvas.height - 50, width: canvas.width, height: 50 },
+  { x: 200, y: canvas.height - 200, width: 200, height: 20 },
+  { x: 500, y: canvas.height - 350, width: 200, height: 20 },
+  { x: 800, y: canvas.height - 150, width: 300, height: 20 }
+];
+
+// Key input
+const keys = {};
+document.addEventListener("keydown", e => keys[e.key] = true);
+document.addEventListener("keyup", e => keys[e.key] = false);
+
+// Base64 Player Sprite
 const playerImg = new Image();
 playerImg.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVRYR+3X0Q2DMBBG4XMQcwBnACcwA3MAmcARkARwgMchwKO1TaihmNiBs/MpUZx9dW9rIhwJzOR9fL2S9rtHclEXtA4G5nVc3YBB6QjW1eF0ZoXc9hllLQro4A1uU6q2vgujOyiTujlPj1FblH9uud78TBwATWvKe7XWnmkQDsJAgQSeJv3KSqGYgo0VoJ38BbBrbP4aYTwMoZv260E/6r0iY0R8sUDKLtNJ4w8zF5gWTSy9VW8g5vSEVrNQqILtAAAAAElFTkSuQmCC";
 
+// Draw player
 function drawPlayer() {
   ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
 }
 
+// Update loop
+function update() {
+  // Horizontal movement
+  if (keys["ArrowRight"] || keys["d"]) player.dx = player.speed;
+  else if (keys["ArrowLeft"] || keys["a"]) player.dx = -player.speed;
+  else player.dx = 0;
+
+  // Jump
+  if ((keys["ArrowUp"] || keys["w"]) && player.grounded) {
+    player.dy = -player.jumpForce;
+    player.grounded = false;
+  }
+
+  // Gravity
+  player.dy += gravity;
+
+  // Apply movement
+  player.x += player.dx;
+  player.y += player.dy;
+
+  // Platform collision
+  player.grounded = false;
+  platforms.forEach(p => {
+    if (
+      player.x < p.x + p.width &&
+      player.x + player.width > p.x &&
+      player.y + player.height < p.y + 20 &&
+      player.y + player.height + player.dy >= p.y
+    ) {
+      player.y = p.y - player.height;
+      player.dy = 0;
+      player.grounded = true;
+    }
+  });
+
+  draw();
+  requestAnimationFrame(update);
+}
+
+// Draw everything
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Player Sprite (replaces yellow square)
+  // Player
   drawPlayer();
 
   // Platforms
   ctx.fillStyle = "green";
-  platforms.forEach(p => {
-    ctx.fillRect(p.x, p.y, p.width, p.height);
-  });
+  platforms.forEach(p => ctx.fillRect(p.x, p.y, p.width, p.height));
 }
 
+// Start the game
 update();
+</script>
+</body>
+</html>
